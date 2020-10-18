@@ -18,8 +18,8 @@ func NewTemplateLoader() *TemplateLoader {
 
 type RenderTemplateFunc func(wr io.Writer, data interface{}) error
 
-func (tl *TemplateLoader) GetRenderTemplateFunc(name string) (RenderTemplateFunc, error) {
-	templates, err := tl.compileTemplates(name)
+func (tl *TemplateLoader) GetRenderTemplateFunc(templateName string) (RenderTemplateFunc, error) {
+	templates, err := tl.compileTemplates(templateName)
 	if err != nil {
 		return nil, err
 	}
@@ -29,12 +29,12 @@ func (tl *TemplateLoader) GetRenderTemplateFunc(name string) (RenderTemplateFunc
 	}, nil
 }
 
-func (tl *TemplateLoader) compileTemplates(viewTemplate string) (*template.Template, error) {
+func (tl *TemplateLoader) compileTemplates(templateName string) (*template.Template, error) {
 	paths := []string{
 		tl.getTemplatePath("base.html"),
 		tl.getTemplatePath("head.html"),
 		tl.getTemplatePath("navbar.html"),
-		tl.getTemplatePath(viewTemplate),
+		tl.getTemplatePath(templateName),
 	}
 
 	templates, err := template.ParseFiles(paths...)
