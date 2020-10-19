@@ -4,13 +4,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/mikitachab/score-board/db"
 	"github.com/mikitachab/score-board/server"
 )
 
 func main() {
-	db.DBtest()
-
 	s := server.NewServer()
 	port := getPort()
 	log.Printf("Starting server on port%s ...\n", port)
