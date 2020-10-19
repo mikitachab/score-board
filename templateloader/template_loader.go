@@ -18,13 +18,17 @@ func NewTemplateLoader() *TemplateLoader {
 
 type RenderTemplateFunc func(wr io.Writer, data interface{}) error
 
+type ViewData struct {
+	ViewData interface{}
+}
+
 func (tl *TemplateLoader) GetRenderTemplateFunc(templateName string) (RenderTemplateFunc, error) {
 	templates, err := tl.compileTemplates(templateName)
 	if err != nil {
 		return nil, err
 	}
 	return func(wr io.Writer, data interface{}) error {
-		err := templates.ExecuteTemplate(wr, "base", data)
+		err := templates.ExecuteTemplate(wr, "base", ViewData{data})
 		return err
 	}, nil
 }
