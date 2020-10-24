@@ -1,0 +1,11 @@
+{{ define "view" }}
+
+<div class="container my-2">
+    <ul class="list-group">
+        {{range .}}
+            <li class="list-group-item">{{.Name}}</li>
+        {{end}}
+    </ul>
+</div>
+
+{{ end }}
