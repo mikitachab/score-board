@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"gorm.io/gorm"
 
 	"github.com/mikitachab/score-board/db"
@@ -12,14 +13,14 @@ import (
 )
 
 type Server struct {
-	mux *http.ServeMux
+	mux *mux.Router
 	tl  *templateloader.TemplateLoader
 	db  *gorm.DB
 }
 
 func NewServer() *Server {
 	s := &Server{
-		mux: http.NewServeMux(),
+		mux: mux.NewRouter(),
 		tl:  templateloader.NewTemplateLoader(),
 		db:  db.GetDB(),
 	}
@@ -33,8 +34,8 @@ func (s *Server) ListenAndServe(port string) error {
 }
 
 func (s *Server) setupRoutes() {
-	s.mux.Handle("/players", s.handlePlayersList())
-	s.mux.Handle("/", s.handleIndex())
+	s.mux.HandleFunc("/players", s.handlePlayersList())
+	s.mux.HandleFunc("/", s.handleIndex())
 }
 
 func (s *Server) handleIndex() http.HandlerFunc {
