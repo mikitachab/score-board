@@ -34,8 +34,8 @@ func (s *Server) ListenAndServe(port string) error {
 }
 
 func (s *Server) setupRoutes() {
-	s.mux.HandleFunc("/players", s.handlePlayersList())
-	s.mux.HandleFunc("/", s.handleIndex())
+	s.mux.HandleFunc("/players", s.handlePlayersList()).Methods("GET")
+	s.mux.HandleFunc("/", s.handleIndex()).Methods("GET")
 }
 
 func (s *Server) handleIndex() http.HandlerFunc {
@@ -43,13 +43,8 @@ func (s *Server) handleIndex() http.HandlerFunc {
 	handleErr(err, "failed to setup index template")
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodGet:
-			err := renderIndexTemplate(w, nil)
-			handleErr(err)
-		default:
-			w.WriteHeader(http.StatusMethodNotAllowed)
-		}
+		err := renderIndexTemplate(w, nil)
+		handleErr(err)
 	}
 }
 
@@ -58,15 +53,10 @@ func (s *Server) handlePlayersList() http.HandlerFunc {
 	handleErr(err, "failed to setup player_list template")
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case http.MethodGet:
-			var players []db.Player
-			s.db.Find(&players)
-			err := renderPlayersListTemplate(w, players)
-			handleErr(err)
-		default:
-			w.WriteHeader(http.StatusMethodNotAllowed)
-		}
+		var players []db.Player
+		s.db.Find(&players)
+		err := renderPlayersListTemplate(w, players)
+		handleErr(err)
 	}
 }
 
