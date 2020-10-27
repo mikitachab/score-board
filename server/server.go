@@ -33,33 +33,6 @@ func (s *Server) ListenAndServe(port string) error {
 	return http.ListenAndServe(port, s.mux)
 }
 
-func (s *Server) setupRoutes() {
-	s.mux.HandleFunc("/players", s.handlePlayersList()).Methods("GET")
-	s.mux.HandleFunc("/", s.handleIndex()).Methods("GET")
-}
-
-func (s *Server) handleIndex() http.HandlerFunc {
-	renderIndexTemplate, err := s.tl.GetRenderTemplateFunc("index.html")
-	handleErr(err, "failed to setup index template")
-
-	return func(w http.ResponseWriter, r *http.Request) {
-		err := renderIndexTemplate(w, nil)
-		handleErr(err)
-	}
-}
-
-func (s *Server) handlePlayersList() http.HandlerFunc {
-	renderPlayersListTemplate, err := s.tl.GetRenderTemplateFunc("players_list.html")
-	handleErr(err, "failed to setup player_list template")
-
-	return func(w http.ResponseWriter, r *http.Request) {
-		var players []db.Player
-		s.db.Find(&players)
-		err := renderPlayersListTemplate(w, players)
-		handleErr(err)
-	}
-}
-
 func handleErr(err error, message ...string) {
 	if err != nil {
 		if len(message) > 0 {
@@ -67,4 +40,32 @@ func handleErr(err error, message ...string) {
 		}
 		log.Fatal(err)
 	}
+}
+
+type TemplateHandlerFunc func(HandlerCtx) http.HandlerFunc
+
+type HandlerCtx struct {
+	S                  *Server
+	RenderTemplateFunc templateloader.RenderTemplateFunc
+}
+
+func (s *Server) templateHandlerWrap(templateName string, handler TemplateHandlerFunc) http.HandlerFunc {
+	rtf, err := s.tl.GetRenderTemplateFunc(templateName)
+	handleErr(err, fmt.Sprintf("failed to setup %s template", templateName))
+	return handler(HandlerCtx{s, rtf})
+}
+
+func handleSimpleTemplate(ctx HandlerCtx) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		err := ctx.RenderTemplateFunc(w, nil)
+		handleErr(err)
+	}
+}
+
+func (s *Server) Handle(pattern, templateName string, handler TemplateHandlerFunc) *mux.Route {
+	if handler == nil {
+		handler = handleSimpleTemplate
+	}
+	wrappedHandler := s.templateHandlerWrap(templateName, handler)
+	return s.mux.HandleFunc(pattern, wrappedHandler)
 }
