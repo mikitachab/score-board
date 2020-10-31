@@ -7,7 +7,9 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetDB() *DBRepository {
+// GetDB is a function that setup database connection
+// and return Repository instance to handle db operation
+func GetDB() *Repository {
 	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatal("failed to connect database")
@@ -20,5 +22,5 @@ func GetDB() *DBRepository {
 		&PlayScore{},
 	)
 
-	return &DBRepository{db}
+	return &Repository{db}
 }

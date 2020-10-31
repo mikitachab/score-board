@@ -6,22 +6,29 @@ import (
 	"path/filepath"
 )
 
+// TemplateLoader is abstraction for dealing with
+// compiling and rendering view templates
 type TemplateLoader struct {
 	templatesPath string
 }
 
+// NewTemplateLoader create default TemplateLoader
 func NewTemplateLoader() *TemplateLoader {
 	return &TemplateLoader{
 		templatesPath: "template",
 	}
 }
 
+// RenderTemplateFunc is a callback for rendering template in views
 type RenderTemplateFunc func(wr io.Writer, data interface{}) error
 
+// ViewData is a struct which represent data
+// that should be passed to view template
 type ViewData struct {
 	ViewData interface{}
 }
 
+// GetRenderTemplateFunc compile view templates and return callback to render it
 func (tl *TemplateLoader) GetRenderTemplateFunc(templateName string) (RenderTemplateFunc, error) {
 	templates, err := tl.compileTemplates(templateName)
 	if err != nil {
