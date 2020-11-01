@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"gorm.io/gorm"
 
 	"github.com/mikitachab/score-board/db"
 	"github.com/mikitachab/score-board/templateloader"
@@ -15,7 +14,7 @@ import (
 type Server struct {
 	mux *mux.Router
 	tl  *templateloader.TemplateLoader
-	db  *gorm.DB
+	db  *db.DBRepository
 }
 
 func NewServer() *Server {
@@ -53,8 +52,7 @@ func (s *Server) handlePlayersList() http.HandlerFunc {
 	handleErr(err, "failed to setup player_list template")
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		var players []db.Player
-		s.db.Find(&players)
+		players := s.db.GetAllPlayers()
 		err := renderPlayersListTemplate(w, players)
 		handleErr(err)
 	}
