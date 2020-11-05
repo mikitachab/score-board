@@ -11,12 +11,14 @@ import (
 	"github.com/mikitachab/score-board/templateloader"
 )
 
+// Server is a main application abstraction
 type Server struct {
 	mux *mux.Router
 	tl  *templateloader.TemplateLoader
-	db  *db.DBRepository
+	db  *db.Repository
 }
 
+// NewServer function create and setup server
 func NewServer() *Server {
 	s := &Server{
 		mux: mux.NewRouter(),
@@ -28,6 +30,8 @@ func NewServer() *Server {
 	return s
 }
 
+// ListenAndServe starts listening for connection
+// and handle them
 func (s *Server) ListenAndServe(port string) error {
 	return http.ListenAndServe(port, s.mux)
 }
