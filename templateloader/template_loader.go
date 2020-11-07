@@ -6,6 +6,11 @@ import (
 	"path/filepath"
 )
 
+// Interface define interface of TemplateLoader
+type Interface interface {
+	GetRenderTemplateFunc(string) (RTF, error)
+}
+
 // TemplateLoader is abstraction for dealing with
 // compiling and rendering view templates
 type TemplateLoader struct {
@@ -19,8 +24,8 @@ func NewTemplateLoader() *TemplateLoader {
 	}
 }
 
-// RenderTemplateFunc is a callback for rendering template in views
-type RenderTemplateFunc func(wr io.Writer, data interface{}) error
+// RTF (RenderTemplateFunc) is a callback for rendering template in views
+type RTF func(wr io.Writer, data interface{}) error
 
 // ViewData is a struct which represent data
 // that should be passed to view template
@@ -29,7 +34,7 @@ type ViewData struct {
 }
 
 // GetRenderTemplateFunc compile view templates and return callback to render it
-func (tl *TemplateLoader) GetRenderTemplateFunc(templateName string) (RenderTemplateFunc, error) {
+func (tl *TemplateLoader) GetRenderTemplateFunc(templateName string) (RTF, error) {
 	templates, err := tl.compileTemplates(templateName)
 	if err != nil {
 		return nil, err

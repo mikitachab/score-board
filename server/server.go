@@ -14,16 +14,20 @@ import (
 // Server is a main application abstraction
 type Server struct {
 	mux *mux.Router
-	tl  *templateloader.TemplateLoader
-	db  *db.Repository
+	tl  templateloader.Interface
+	db  db.RepositoryInterface
 }
 
 // NewServer function create and setup server
 func NewServer() *Server {
+	return makeServer(templateloader.NewTemplateLoader(), db.GetDB())
+}
+
+func makeServer(tl templateloader.Interface, dbrepo db.RepositoryInterface) *Server {
 	s := &Server{
 		mux: mux.NewRouter(),
-		tl:  templateloader.NewTemplateLoader(),
-		db:  db.GetDB(),
+		tl:  tl,
+		db:  dbrepo,
 	}
 	s.setupMiddleware()
 	s.setupRoutes()
