@@ -25,7 +25,7 @@ func NewServer() *Server {
 		tl:  templateloader.NewTemplateLoader(),
 		db:  db.GetDB(),
 	}
-
+	s.setupMiddleware()
 	s.setupRoutes()
 	return s
 }
@@ -34,6 +34,11 @@ func NewServer() *Server {
 // and handle them
 func (s *Server) ListenAndServe(port string) error {
 	return http.ListenAndServe(port, s.mux)
+}
+
+func (s *Server) setupMiddleware() {
+	s.mux.Use(RecoverMiddleware)
+	s.mux.Use(LoggingMiddleware)
 }
 
 func (s *Server) setupRoutes() {
