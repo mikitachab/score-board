@@ -44,9 +44,16 @@ func (s *Server) setupRoutes() {
 func (s *Server) handleIndex() http.HandlerFunc {
 	renderIndexTemplate, err := s.tl.GetRenderTemplateFunc("index.html")
 	handleErr(err, "failed to setup index template")
-
 	return func(w http.ResponseWriter, r *http.Request) {
-		err := renderIndexTemplate(w, nil)
+		plays := s.db.GetAllPlays()
+		var cards []Card
+
+		for _, play := range plays {
+			playScores := s.db.GetPlayScoresForPlay(play)
+			cards = append(cards, constructCardFromPlayScores(playScores))
+		}
+
+		err = renderIndexTemplate(w, cards)
 		handleErr(err)
 	}
 }
