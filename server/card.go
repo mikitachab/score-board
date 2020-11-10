@@ -44,13 +44,13 @@ func constructCardFromPlayScores(playScores []db.PlayScore) Card {
 	}
 
 	for i, h := range histograms {
-		histograms[i].TopPlayerName = findTopStat(h)
+		histograms[i].TopPlayerName = h.findTopStatName()
 	}
 
 	return Card{histograms}
 }
 
-func findTopStat(h Histogram) string {
+func (h *Histogram) findTopStatName() string {
 	if len(h.Stats) == 0 {
 		return "Empty"
 	}
