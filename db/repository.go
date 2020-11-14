@@ -4,6 +4,13 @@ import (
 	"gorm.io/gorm"
 )
 
+// RepositoryInterface define interface for db repo
+type RepositoryInterface interface {
+	GetAllPlayers() []Player
+	GetAllPlays() []Play
+	GetPlayScoresForPlay(Play) []PlayScore
+}
+
 // Repository is a wrapper which encapsulate db access operation
 type Repository struct {
 	db *gorm.DB
