@@ -28,7 +28,7 @@ func makeTestCtx(t *testing.T) *TestCtx {
 
 func assertStatusOk(rr *httptest.ResponseRecorder, t *testing.T) {
 	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v",
+		t.Errorf("handler returned wrong status code: got %v expected %v",
 			status, http.StatusOK)
 	}
 }
@@ -52,5 +52,3 @@ func TestHandlePlayersList(t *testing.T) {
 
 	assertStatusOk(rr, t)
 }
-
-// TODO{mikitachab} handleIndex unit test

@@ -20,24 +20,20 @@ type Server struct {
 
 // NewServer function create and setup server
 func NewServer() *Server {
-	return makeServer(templateloader.NewTemplateLoader(), db.GetDB())
+	s := &Server{
+		mux: mux.NewRouter(),
+		tl:  templateloader.NewTemplateLoader(),
+		db:  db.GetDB(),
+	}
+	s.setupMiddleware()
+	s.setupRoutes()
+	return s
 }
 
 // ListenAndServe starts listening for connection
 // and handle them
 func (s *Server) ListenAndServe(port string) error {
 	return http.ListenAndServe(port, s.mux)
-}
-
-func makeServer(tl templateloader.Interface, dbrepo db.RepositoryInterface) *Server {
-	s := &Server{
-		mux: mux.NewRouter(),
-		tl:  tl,
-		db:  dbrepo,
-	}
-	s.setupMiddleware()
-	s.setupRoutes()
-	return s
 }
 
 func (s *Server) setupMiddleware() {
