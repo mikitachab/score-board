@@ -33,6 +33,21 @@ func (m *MockRepositoryInterface) EXPECT() *MockRepositoryInterfaceMockRecorder 
 	return m.recorder
 }
 
+// CreatePlayer mocks base method
+func (m *MockRepositoryInterface) CreatePlayer(arg0 string) (*db.Player, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePlayer", arg0)
+	ret0, _ := ret[0].(*db.Player)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreatePlayer indicates an expected call of CreatePlayer
+func (mr *MockRepositoryInterfaceMockRecorder) CreatePlayer(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePlayer", reflect.TypeOf((*MockRepositoryInterface)(nil).CreatePlayer), arg0)
+}
+
 // GetAllPlayers mocks base method
 func (m *MockRepositoryInterface) GetAllPlayers() []db.Player {
 	m.ctrl.T.Helper()

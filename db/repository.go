@@ -9,6 +9,7 @@ type RepositoryInterface interface {
 	GetAllPlayers() []Player
 	GetAllPlays() []Play
 	GetPlayScoresForPlay(Play) []PlayScore
+	CreatePlayer(string) (*Player, error)
 }
 
 // Repository is a wrapper which encapsulate db access operation
@@ -35,4 +36,12 @@ func (r *Repository) GetAllPlays() []Play {
 	var plays []Play
 	r.db.Find(&plays)
 	return plays
+}
+
+// CreatePlayer Create player with given name if that
+// player does no exist
+func (r *Repository) CreatePlayer(name string) (*Player, error) {
+	player := Player{Name: name}
+	result := r.db.Create(&player)
+	return &player, result.Error
 }
