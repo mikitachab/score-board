@@ -9,5 +9,6 @@ test:
 
 mocks: FORCE
 	mockgen -destination=mocks/mock_repository.go -package=mocks github.com/mikitachab/score-board/db RepositoryInterface
+	mockgen -destination=mocks/mock_template.go -package=mocks github.com/mikitachab/score-board/templateloader TemplateInterface
 
 FORCE:

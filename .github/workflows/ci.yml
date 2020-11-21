@@ -6,20 +6,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Install Go
-      uses: actions/setup-go@v2
-    - name: Run build
-      run: make
+      - uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
+      - name: Run build
+        run: make
 
   lint:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Install Go
-      uses: actions/setup-go@v2
-    - name: Install GoLint
-      run: sudo apt-get install -y golint
-    - name: Run GoLint
-      run: make lint
+      - uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
+      - name: Install GoLint
+        run: sudo apt-get install -y golint
+      - name: Run GoLint
+        run: make lint
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
+      - name: Run GoLint
+        run: make test

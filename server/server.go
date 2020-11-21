@@ -20,14 +20,10 @@ type Server struct {
 
 // NewServer function create and setup server
 func NewServer() *Server {
-	return makeServer(templateloader.NewTemplateLoader(), db.GetDB())
-}
-
-func makeServer(tl templateloader.Interface, dbrepo db.RepositoryInterface) *Server {
 	s := &Server{
 		mux: mux.NewRouter(),
-		tl:  tl,
-		db:  dbrepo,
+		tl:  templateloader.NewTemplateLoader(),
+		db:  db.GetDB(),
 	}
 	s.setupMiddleware()
 	s.setupRoutes()
@@ -45,36 +41,36 @@ func (s *Server) setupMiddleware() {
 	s.mux.Use(LoggingMiddleware)
 }
 
-func (s *Server) setupRoutes() {
-	s.mux.HandleFunc("/players", s.handlePlayersList()).Methods("GET")
-	s.mux.HandleFunc("/", s.handleIndex()).Methods("GET")
+// HandlerCtx server context
+// to be passed to TemplateHandlerFunc
+type HandlerCtx struct {
+	DB       db.RepositoryInterface
+	Template templateloader.TemplateInterface
 }
 
-func (s *Server) handleIndex() http.HandlerFunc {
-	renderIndexTemplate, err := s.tl.GetRenderTemplateFunc("index.html")
-	handleErr(err, "failed to setup index template")
-	return func(w http.ResponseWriter, r *http.Request) {
-		plays := s.db.GetAllPlays()
-		var cards []Card
+func (s *Server) makeHandlerCtx(templateName string) *HandlerCtx {
+	template, err := s.tl.LoadTemplate(templateName)
+	handleErr(err, fmt.Sprintf("failed to setup %s template", templateName))
+	return &HandlerCtx{s.db, template}
+}
 
-		for _, play := range plays {
-			playScores := s.db.GetPlayScoresForPlay(play)
-			cards = append(cards, constructCardFromPlayScores(playScores))
-		}
+// View is a func that return http handler
+// that should render template
+type View func(*HandlerCtx) http.HandlerFunc
 
-		err = renderIndexTemplate(w, cards)
-		handleErr(err)
+// Handle is function to connect url pattern, template and handler function
+func (s *Server) Handle(pattern, templateName string, view View) *mux.Route {
+	if view == nil {
+		view = viewSimpleTemplate
 	}
+	handlerCtx := s.makeHandlerCtx(templateName)
+	handler := view(handlerCtx)
+	return s.mux.HandleFunc(pattern, handler)
 }
 
-func (s *Server) handlePlayersList() http.HandlerFunc {
-	renderPlayersListTemplate, err := s.tl.GetRenderTemplateFunc("players_list.html")
-	handleErr(err, "failed to setup player_list template")
-
+func viewSimpleTemplate(ctx *HandlerCtx) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		players := s.db.GetAllPlayers()
-		err := renderPlayersListTemplate(w, players)
-		handleErr(err)
+		ctx.Template.Render(w, nil)
 	}
 }
 
