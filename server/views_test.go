@@ -75,7 +75,7 @@ func TestHandleAddPlayerGet(t *testing.T) {
 	assertStatusOk(rr, t)
 }
 
-func makePostRequest(method, URL string, data map[string]string) (*http.Request, error) {
+func createPostRequest(method, URL string, data map[string]string) (*http.Request, error) {
 	formData := url.Values{}
 	for k, v := range data {
 		formData.Set(k, v)
@@ -95,7 +95,7 @@ func TestHandleAddPlayerPostOk(t *testing.T) {
 
 	playerName := "test"
 	data := map[string]string{"playerName": playerName}
-	req, err := makePostRequest("POST", "/players/add", data)
+	req, err := createPostRequest("POST", "/players/add", data)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -117,7 +117,7 @@ func TestHandleAddPlayerPostNotOk(t *testing.T) {
 
 	playerName := "test"
 	data := map[string]string{"playerName": playerName}
-	req, err := makePostRequest("POST", "/players/add", data)
+	req, err := createPostRequest("POST", "/players/add", data)
 	if err != nil {
 		t.Fatal(err)
 	}
