@@ -1,0 +1,14 @@
+{{ define "view" }}
+
+<div class="container my-2">
+    <form method="POST" action="/players/add" class="{{if .Validated}}was-validated{{end}}">
+        <div class="form-group">
+            <label for="nameInput">Player</label>
+            <input id="nameInput" name="playerName" type="text" class="form-control input-sm" required>
+            {{ range .Errors }} <div class="invalid-feedback"> {{ . }} </div> {{ end }}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+{{ end }}
