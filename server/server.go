@@ -74,6 +74,10 @@ func viewSimpleTemplate(ctx *HandlerCtx) http.HandlerFunc {
 	}
 }
 
+func getPublicFileServer() http.Handler {
+	return http.FileServer(http.Dir("public"))
+}
+
 func handleErr(err error, message ...string) {
 	if err != nil {
 		if len(message) > 0 {
