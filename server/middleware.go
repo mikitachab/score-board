@@ -21,7 +21,7 @@ func RecoverMiddleware(h http.Handler) http.Handler {
 // LoggingMiddleware log every incomming request
 func LoggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Handling request for: ", r.RequestURI)
+		log.Println("Handling", r.Method, "request for:", r.RequestURI)
 		next.ServeHTTP(w, r)
 	})
 }

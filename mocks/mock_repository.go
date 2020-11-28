@@ -33,6 +33,21 @@ func (m *MockRepositoryInterface) EXPECT() *MockRepositoryInterfaceMockRecorder 
 	return m.recorder
 }
 
+// CreatePlay mocks base method
+func (m *MockRepositoryInterface) CreatePlay(arg0 string) (db.Play, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePlay", arg0)
+	ret0, _ := ret[0].(db.Play)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreatePlay indicates an expected call of CreatePlay
+func (mr *MockRepositoryInterfaceMockRecorder) CreatePlay(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePlay", reflect.TypeOf((*MockRepositoryInterface)(nil).CreatePlay), arg0)
+}
+
 // CreatePlayer mocks base method
 func (m *MockRepositoryInterface) CreatePlayer(arg0 string) (*db.Player, error) {
 	m.ctrl.T.Helper()
@@ -88,4 +103,47 @@ func (m *MockRepositoryInterface) GetPlayScoresForPlay(arg0 db.Play) []db.PlaySc
 func (mr *MockRepositoryInterfaceMockRecorder) GetPlayScoresForPlay(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPlayScoresForPlay", reflect.TypeOf((*MockRepositoryInterface)(nil).GetPlayScoresForPlay), arg0)
+}
+
+// GetPlayerByName mocks base method
+func (m *MockRepositoryInterface) GetPlayerByName(arg0 string) (db.Player, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPlayerByName", arg0)
+	ret0, _ := ret[0].(db.Player)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPlayerByName indicates an expected call of GetPlayerByName
+func (mr *MockRepositoryInterfaceMockRecorder) GetPlayerByName(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPlayerByName", reflect.TypeOf((*MockRepositoryInterface)(nil).GetPlayerByName), arg0)
+}
+
+// SavePlayScore mocks base method
+func (m *MockRepositoryInterface) SavePlayScore(arg0 db.Player, arg1 db.Play, arg2 db.SevenWondersScore) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SavePlayScore", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SavePlayScore indicates an expected call of SavePlayScore
+func (mr *MockRepositoryInterfaceMockRecorder) SavePlayScore(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SavePlayScore", reflect.TypeOf((*MockRepositoryInterface)(nil).SavePlayScore), arg0, arg1, arg2)
+}
+
+// SaveScores mocks base method
+func (m *MockRepositoryInterface) SaveScores(arg0 map[string]*db.SevenWondersScore) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SaveScores", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SaveScores indicates an expected call of SaveScores
+func (mr *MockRepositoryInterfaceMockRecorder) SaveScores(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveScores", reflect.TypeOf((*MockRepositoryInterface)(nil).SaveScores), arg0)
 }

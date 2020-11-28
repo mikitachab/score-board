@@ -1,0 +1,52 @@
+{{define "view"}}
+
+<div class="container my-2">
+    <form action="/score/add/" method="POST">
+        <div class="row">
+            <div class="col">
+                Category
+            </div>
+            {{range .Players}}
+            <div class="col">
+                {{.}}
+            </div>
+            {{end}}
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col">Wonder</div>
+            {{range .Players}}
+            <div class="col">
+                <select class="custom-select" name="{{.}}-Wonder">
+                    <option>Ephesos</option>
+                    <option>Olympia</option>
+                    <option>Gizah</option>
+                    <option>Babylon</option>
+                    <option>Rhodos</option>
+                    <option>Halikarnassos</option>
+                    <option>Alexandria</option>
+                </select>
+            </div>
+            {{end}}
+        </div>
+        <hr>
+        {{range $c := .Categories}}
+            <div class="row">
+                <div class="col">
+                    {{$c}}
+                </div>
+                {{range $p := $.Players}}
+                <div class="col">
+                    <input required name="{{$p}}-{{$c}}" type="number" class="form-control">
+                </div>
+                {{end}}
+            </div>
+            <hr>
+        {{end}}
+        <input name="players" hidden type="text" value="{{range $p := $.Players}}{{.}};{{end}}">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+
+{{end}}
