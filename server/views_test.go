@@ -132,3 +132,22 @@ func TestHandleAddPlayerPostNotOk(t *testing.T) {
 
 	assertStatusOk(rr, t)
 }
+
+func TestHandleAddScoreSelectPlayersGet(t *testing.T) {
+	testCtx := makeTestCtx(t)
+	defer testCtx.mockCtrl.Finish()
+
+	req, err := http.NewRequest("GET", "/score/add/select", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	rr := httptest.NewRecorder()
+	handler := handleAddScoreSelectPlayers(testCtx.handlerCtx)
+
+	players := []db.Player{{Name: "test"}}
+	testCtx.mockDB.EXPECT().GetAllPlayers().Return(players)
+	testCtx.mockTemplate.EXPECT().Render(rr, players)
+
+	handler.ServeHTTP(rr, req)
+	assertStatusOk(rr, t)
+}

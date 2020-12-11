@@ -1,0 +1,17 @@
+{{define "view"}}
+
+<div class="container my-2">
+    <form method="POST" action="/score/add/select">
+        <div class="form-group">
+        {{range .}}
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="{{.Name}}" name="{{.Name}}">
+                <label class="form-check-label" for="{{.Name}}">{{.Name}}</label>
+            </div>
+        {{end}}
+        </div>
+        <button type="submit" class="btn btn-primary my-2">Submit</button>
+    </form>
+</div>
+
+{{end}}
