@@ -69,6 +69,8 @@ func handleAddScoreSelectPlayers(ctx *HandlerCtx) http.HandlerFunc {
 			}
 			q := addScoreURL.Query()
 			for name := range r.Form {
+				//TODO{antonskwr} check if player exists in the data base? (defensive, might be redundant
+				//since the this is validate in the next handler in the pipeline)
 				q.Add("player", name)
 			}
 			addScoreURL.RawQuery = q.Encode()
@@ -95,10 +97,22 @@ func handleAddScore(ctx *HandlerCtx) http.HandlerFunc {
 		switch r.Method {
 		case "GET":
 			players := r.URL.Query()["player"]
+			//TODO{antonskwr} check if all players exist in database here? (kind of defensive technic)
 			ctx.Template.Render(w, addScoreData{players, categories})
 		case "POST":
 			r.ParseForm()
-			scores := GetScoresFromForm(r.Form)
+
+			players := ctx.DB.GetAllPlayers()
+			playersMap := make(map[string]bool)
+			for i := range players {
+				playersMap[players[i].Name] = true
+			}
+
+			scores, err := GetScoresFromForm(r.Form, playersMap)
+			if err != nil {
+				handleErr(err)
+			}
+
 			for k, v := range scores {
 				fmt.Printf("%s %v", k, v)
 			}
