@@ -24,7 +24,7 @@ func validateNumPlayers(list []string) error {
 func checkForDuplicates(list []string) error {
 	validationMap := make(map[string]int)
 	for _, element := range list {
-		validationMap[element] += 1
+		validationMap[element]++
 	}
 
 	for _, v := range validationMap {
@@ -38,7 +38,7 @@ func checkForDuplicates(list []string) error {
 }
 
 func validateAllPlayersInMap(list []string, checkMap map[string]bool) error {
-	var err error = nil
+	var err error
 
 	for _, name := range list {
 		_, ok := checkMap[name]
